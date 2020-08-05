@@ -3,12 +3,20 @@ from datetime import datetime, timedelta
 import logging
 import time
 import sqlite3
+from config import admin_id, webhook_url
+import json
 
 db_path = 'db.sqlite'  # БД лежит в той же папке
 logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s',
                     level=logging.INFO, filename='log/collector.log'
                     )
 logger = logging.getLogger(__name__)
+
+
+def do_alarm(t_alarmtext):
+    headers = {"Content-type": "application/json"}
+    payload = {"text": f"{t_alarmtext}", "chat_id": f"{admin_id}"}
+    requests.post(url=webhook_url, data=json.dumps(payload), headers=headers)
 
 
 def get_json_items(data=None):
@@ -91,5 +99,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Вы завершили работу программы collector')
         logger.info('Program has been stop manually')
-    except Exception:
+    except Exception as e:
+        t_alarmtext = f'Crossout_helper (app_collector.py): {str(e)}'
+        do_alarm(t_alarmtext)
         logger.error(f'Other except error Exception', exc_info=True)

@@ -1,5 +1,6 @@
 from loader import bot, storage
 import logging
+from src.app_collector import do_alarm
 
 
 logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s',
@@ -23,5 +24,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Вы завершили работу программы collector')
         logger.info('Program has been stop manually')
-    except Exception:
-        logger.error(f'other error {Exception.__annotations__}')
+    except Exception as e:
+        t_alarmtext = f'Crossout_helper (app.py): {str(e)}'
+        do_alarm(t_alarmtext)
+        logger.error(f'Other except error Exception', exc_info=True)

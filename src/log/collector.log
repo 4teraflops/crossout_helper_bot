@@ -16210,3 +16210,138 @@ app_collector.py [LINE:73] #INFO     [2020-08-03 11:39:39,262]  Data Recorded
 app_collector.py [LINE:73] #INFO     [2020-08-03 11:43:40,429]  Data Recorded
 app_collector.py [LINE:73] #INFO     [2020-08-03 11:47:41,576]  Data Recorded
 app_collector.py [LINE:73] #INFO     [2020-08-03 11:51:42,700]  Data Recorded
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:15:17,825]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:15:41,311]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:15:47,555]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:17:23,546]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:96] #ERROR    [2020-08-05 16:17:23,546]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:18:54,351]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:25:03,341]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:25:17,027]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:25:34,668]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:26:02,282]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:95] #ERROR    [2020-08-05 16:26:54,640]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 88, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 24, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:104] #ERROR    [2020-08-05 17:26:21,545]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 95, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 39, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 31, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:104] #ERROR    [2020-08-05 17:26:55,824]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 95, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 39, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 31, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:105] #ERROR    [2020-08-05 17:44:40,045]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 96, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 40, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:105] #ERROR    [2020-08-05 17:45:36,899]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 96, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 40, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
