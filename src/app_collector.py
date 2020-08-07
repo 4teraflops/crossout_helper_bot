@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import logging
 import time
 import sqlite3
-from config import admin_id, webhook_url
+from w_config import webhook_url, admin_id  # Да, pycharm ругается, но на VPS это работает.
 import json
 
 db_path = 'db.sqlite'  # БД лежит в той же папке
@@ -11,6 +11,34 @@ logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(
                     level=logging.INFO, filename='log/collector.log'
                     )
 logger = logging.getLogger(__name__)
+
+
+def check_tables():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    tables = cursor.execute('SELECT name from sqlite_master WHERE type = "table"').fetchall()  # Смотрим какие есть таблицы
+    valid_tables = []
+    for t in tables:
+        valid_tables.append(t[0])
+    if 'actual_data' not in valid_tables:  # Создание таблицы actual_data
+        cursor.execute(
+            'CREATE TABLE "actual_data" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "api_id" INTEGER NOT NULL, '
+            '"name" TEXT, "name2" TEXT, "sell_price" REAL, "sell_offers" REAL, "buy_price" REAL, "buy_orders" REAL, '
+            '"faction" TEXT, "rarity" TEXT, "margin" REAL, "crafting_margin" REAL, "category" TEXT, "_type" TEXT, '
+            '"last_update_time" TEXT, "operation_time" TEXT )')
+    elif 'all_collected_data' not in valid_tables:  # Создание таблицы all_collected_data
+        cursor.execute(
+            'CREATE TABLE "all_collected_data" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "api_id" INTEGER '
+            'NOT NULL, "name" TEXT, "name2" TEXT, "sell_price" REAL, "sell_offers" REAL, "buy_price" REAL, '
+            '"buy_orders" REAL, "faction" TEXT, "rarity" TEXT, "margin" REAL, "crafting_margin" REAL, "category" '
+            'TEXT, "_type" TEXT, "last_update_time" TEXT, "operation_time" TEXT )')
+    elif 'analyz_data' not in valid_tables:  # Создание таблицы analyz_data
+        cursor.execute('CREATE TABLE analyz_data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, datetime TEXT NOT '
+                       'NULL, user_id TEXT NOT NULL, first_name TEXT, last_name TEXT, user_name TEXT NOT NULL, '
+                       'button TEXT);')
+        conn.commit()
+    else:
+        return
 
 
 def do_alarm(t_alarmtext):
@@ -35,12 +63,10 @@ def get_cursor_id(table_name):
 
 
 def data_recording():
-
     rsp = get_json_items({'language': 'ru'})
-    first_id = get_cursor_id('all_collected_data')
-
     conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
     cursor = conn.cursor()
+    first_id = get_cursor_id('all_collected_data')
 
     for r in rsp:
         api_id = r['id']
@@ -59,15 +85,16 @@ def data_recording():
         last_update_time = r['lastUpdateTime']
         last_update_time_msk = datetime.strptime(last_update_time, "%Y-%m-%d %H:%M:%S") + timedelta(minutes=180)
         operation_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#        print('api_id: ', api_id, '| name:', name, '| name 2:', name_2, '| Sell Price:', sell_price,
-#              '| Sell Offers:', sell_offers, '|Buy Price: ', buy_price, '| Buy Orders: ', buy_orders,
-#              '| Faction:', faction, '| Rarity: ', rarity, '| Crafting Margin:', crafting_margin, '| Category:',
-#              category, '| Type:', _type, '| Last Update Time: ', last_update_time, '| Operation_time',
-#              operation_time)
+        #        print('api_id: ', api_id, '| name:', name, '| name 2:', name_2, '| Sell Price:', sell_price,
+        #              '| Sell Offers:', sell_offers, '|Buy Price: ', buy_price, '| Buy Orders: ', buy_orders,
+        #              '| Faction:', faction, '| Rarity: ', rarity, '| Crafting Margin:', crafting_margin, '| Category:',
+        #              category, '| Type:', _type, '| Last Update Time: ', last_update_time, '| Operation_time',
+        #              operation_time)
+
         cursor.execute(
             f"INSERT INTO all_collected_data VALUES (Null, '{api_id}', '{name}', '{name_2}', '{sell_price}', '{sell_offers}', '{buy_price}', '{buy_orders}', '{faction}', '{rarity}', '{margin}', '{crafting_margin}', '{category}', '{_type}', '{last_update_time_msk}', '{operation_time}')")
 
-    conn.commit()
+        conn.commit()
     last_id = get_cursor_id('all_collected_data')
     cursor.execute("DELETE from actual_data")  # предварительно затираем то, что было в таблице res_h
     res = cursor.execute(
@@ -84,8 +111,8 @@ def data_recording():
 def remove_old_data():
     conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
     cursor = conn.cursor()
-    #  Рассчет актуального времени (текущая дата минус заданное количество минут)
-    actualtime = datetime.strftime((datetime.now() - timedelta(minutes=10080)), "%Y-%m-%d %H:%M:%S")
+    #  Рассчет актуального времени (текущая дата минус заданное количество минут (32 дня))
+    actualtime = datetime.strftime((datetime.now() - timedelta(minutes=46080)), "%Y-%m-%d %H:%M:%S")
     cursor.execute(f"DELETE from all_collected_data WHERE operation_time < '{actualtime}'")
     conn.commit()
 
@@ -93,6 +120,7 @@ def remove_old_data():
 if __name__ == '__main__':
     try:
         while True:
+            check_tables()
             data_recording()
             remove_old_data()
             time.sleep(240)

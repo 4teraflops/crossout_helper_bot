@@ -16345,3 +16345,43 @@ Traceback (most recent call last):
   File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in get_cursor_id
     line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
 sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:105] #ERROR    [2020-08-07 11:39:16,100]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 96, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 40, in data_recording
+    first_id = get_cursor_id('all_collected_data')
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 32, in get_cursor_id
+    line_id = cursor.execute(f"select seq from sqlite_sequence where name='{table_name}'").fetchall()[0][0]
+sqlite3.OperationalError: no such table: sqlite_sequence
+app_collector.py [LINE:96] #INFO     [2020-08-07 12:49:29,161]  Data Recorded
+app_collector.py [LINE:116] #INFO     [2020-08-07 12:49:37,940]  Program has been stop manually
+app_collector.py [LINE:113] #INFO     [2020-08-07 12:57:14,125]  Program has been stop manually
+app_collector.py [LINE:91] #INFO     [2020-08-07 13:06:24,322]  Data Recorded
+app_collector.py [LINE:112] #INFO     [2020-08-07 13:06:32,131]  Program has been stop manually
+app_collector.py [LINE:90] #INFO     [2020-08-07 13:07:21,680]  Data Recorded
+app_collector.py [LINE:111] #INFO     [2020-08-07 13:07:24,812]  Program has been stop manually
+app_collector.py [LINE:116] #ERROR    [2020-08-07 13:10:50,376]  Other except error Exception
+Traceback (most recent call last):
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 107, in <module>
+    data_recording()
+  File "/home/sanaev-va/PycharmProjects/crossout_helper_bot/src/app_collector.py", line 77, in data_recording
+    cursor.execute(
+sqlite3.OperationalError: database is locked
+app_collector.py [LINE:91] #INFO     [2020-08-07 13:11:17,859]  Data Recorded
+app_collector.py [LINE:91] #INFO     [2020-08-07 13:15:26,533]  Data Recorded
+app_collector.py [LINE:112] #INFO     [2020-08-07 13:15:28,811]  Program has been stop manually
+app_collector.py [LINE:111] #INFO     [2020-08-07 13:26:32,065]  Program has been stop manually
+app_collector.py [LINE:111] #INFO     [2020-08-07 14:58:39,990]  Program has been stop manually
+app_collector.py [LINE:104] #INFO     [2020-08-07 16:13:39,710]  Data Recorded
+app_collector.py [LINE:125] #INFO     [2020-08-07 16:13:51,669]  Program has been stop manually
+app_collector.py [LINE:130] #INFO     [2020-08-07 16:20:12,149]  Program has been stop manually
+app_collector.py [LINE:109] #INFO     [2020-08-07 16:20:38,201]  Data Recorded
+app_collector.py [LINE:131] #INFO     [2020-08-07 16:20:42,314]  Program has been stop manually
+app_collector.py [LINE:130] #INFO     [2020-08-07 16:21:24,078]  Program has been stop manually
+app_collector.py [LINE:130] #INFO     [2020-08-07 17:35:23,176]  Program has been stop manually
+app_collector.py [LINE:129] #INFO     [2020-08-07 17:35:51,973]  Program has been stop manually
+app_collector.py [LINE:108] #INFO     [2020-08-07 17:38:44,577]  Data Recorded
+app_collector.py [LINE:129] #INFO     [2020-08-07 17:38:54,036]  Program has been stop manually
+app_collector.py [LINE:129] #INFO     [2020-08-07 17:44:39,323]  Program has been stop manually
+app_collector.py [LINE:129] #INFO     [2020-08-07 17:45:49,004]  Program has been stop manually

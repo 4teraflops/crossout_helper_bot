@@ -1,15 +1,14 @@
 import logging
 from src.selector import _get_top5_crafting
-from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from loader import dp, bot
 from states.crafting_margin import CraftingMargin
 from aiogram.dispatcher.filters import Command
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from keyboards.inline.callback_datas import menu_callbacks
 from keyboards.inline.choice_buttons import start_menu, crafting_margin_choise_rare
+from src.analyzer import insert_in_analyz_table
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,6 +19,8 @@ async def show_start_menu(message: Message):
     text = 'Привет. \nЯ помогу тебе поднять золотишка! \nВыбирай кнопку'
     await message.answer(text=text, reply_markup=start_menu)
     await CraftingMargin.first()
+
+    insert_in_analyz_table(message.from_user.id, message.from_user.first_name, message.from_user.last_name, message.from_user.username, button='start')
 
 
 @dp.callback_query_handler(menu_callbacks.filter(click1='crafting_margin'), state=CraftingMargin.Start)  # Ловим State
@@ -34,6 +35,9 @@ async def crafting_margin(call: CallbackQuery, state: FSMContext):
     await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id, reply_markup=crafting_margin_choise_rare)  # Меняем клавиатуру в сообщении
     await CraftingMargin.next()  # Присваиваем состояние что переходит на выбор редкости
 
+    insert_in_analyz_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
+                           call.from_user.username, call.data.split(':')[1])
+
 
 @dp.callback_query_handler(state=CraftingMargin.ChoiseRarity)
 async def choice_rarity(call: CallbackQuery, state: FSMContext):
@@ -46,7 +50,10 @@ async def choice_rarity(call: CallbackQuery, state: FSMContext):
         text = 'Привет. \nЯ помогу тебе поднять золотишка!\nВыбирай кнопку'
         await call.message.answer(text=text, reply_markup=start_menu)  # Отправляем стартовое меню
         await state.get_state()
-        await CraftingMargin.first() #  Меняем состояние на первое
+        await CraftingMargin.first()  # Меняем состояние на первое
+
+        insert_in_analyz_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
+                               call.from_user.username, call.data.split(':')[1])
 
 
 ## You can use state '*' if you need to handle all states
