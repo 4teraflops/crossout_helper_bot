@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import logging
 import time
 import sqlite3
-from w_config import webhook_url, admin_id  # Да, pycharm ругается, но на VPS это работает.
+from .w_config import webhook_url, admin_id  # Да, pycharm ругается, но на VPS это работает.
 import json
 
 db_path = 'db.sqlite'  # БД лежит в той же папке

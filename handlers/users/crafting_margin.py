@@ -42,8 +42,8 @@ async def crafting_margin(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(state=CraftingMargin.ChoiseRarity)
 async def choice_rarity(call: CallbackQuery, state: FSMContext):
     button_callback = call.data.split(":")[1]
-    logger.info(f'button_callback={button_callback}')
-    logger.info(f'callback_data={call.data}')
+    #logger.info(f'button_callback={button_callback}')
+    #logger.info(f'callback_data={call.data}')
     if button_callback != 'Back':
         await call.message.answer(text=f'{_get_top5_crafting(button_callback)}', reply_markup=ReplyKeyboardRemove())
     else:
