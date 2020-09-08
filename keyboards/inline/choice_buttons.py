@@ -40,7 +40,7 @@ from keyboards.inline.callback_datas import menu_callbacks
 start_menu = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="ТОП 5 Крафтинг", callback_data=menu_callbacks.new(click1="crafting_margin")),
-        InlineKeyboardButton(text="ТОП 5 Реселлинг", callback_data=menu_callbacks.new(click1="reselling"))
+        InlineKeyboardButton(text="ТОП 10 скачков цен", callback_data=menu_callbacks.new(click1="difference_prices"))
     ]
 ])
 
@@ -59,5 +59,19 @@ crafting_margin_choise_rare = InlineKeyboardMarkup(inline_keyboard=[
     ],
     [
         InlineKeyboardButton(text="Назад", callback_data='crafting_margin:Back')
+    ]
+])
+
+difference_prices_choise_time_range = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text='Сутки', callback_data='difference_prices:one_day'),
+        InlineKeyboardButton(text='Три дня', callback_data='difference_prices:three_days')
+    ],
+    [
+        InlineKeyboardButton(text='Неделя', callback_data='difference_prices:week'),
+        InlineKeyboardButton(text='Месяц', callback_data='difference_prices:month')
+    ],
+    [
+        InlineKeyboardButton(text="Назад", callback_data='difference_prices:Back')
     ]
 ])

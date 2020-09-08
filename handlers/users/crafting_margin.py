@@ -19,7 +19,7 @@ async def show_start_menu(message: Message):
     text = 'Привет. \nЯ помогу тебе поднять золотишка! \nВыбирай кнопку'
     await message.answer(text=text, reply_markup=start_menu)
     await CraftingMargin.first()
-
+    # В анализ
     insert_in_analyz_table(message.from_user.id, message.from_user.first_name, message.from_user.last_name, message.from_user.username, button='start')
 
 
@@ -34,7 +34,7 @@ async def crafting_margin(call: CallbackQuery, state: FSMContext):
     await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=text)  # Меняем текст в сообщении
     await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id, reply_markup=crafting_margin_choise_rare)  # Меняем клавиатуру в сообщении
     await CraftingMargin.next()  # Присваиваем состояние что переходит на выбор редкости
-
+    # В анализ
     insert_in_analyz_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
                            call.from_user.username, call.data.split(':')[1])
 
@@ -45,13 +45,19 @@ async def choice_rarity(call: CallbackQuery, state: FSMContext):
     #logger.info(f'button_callback={button_callback}')
     #logger.info(f'callback_data={call.data}')
     if button_callback != 'Back':
-        await call.message.answer(text=f'{_get_top5_crafting(button_callback)}', reply_markup=ReplyKeyboardRemove())
+        await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=f'{_get_top5_crafting(button_callback)}')
+        await call.message.answer(text='Выбери редкость деталей', reply_markup=crafting_margin_choise_rare)
+
+        # В анализ
+        insert_in_analyz_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
+                               call.from_user.username, call.data.split(':')[1])
     else:
         text = 'Привет. \nЯ помогу тебе поднять золотишка!\nВыбирай кнопку'
-        await call.message.answer(text=text, reply_markup=start_menu)  # Отправляем стартовое меню
+        await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=text)
+        await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id, reply_markup=start_menu)
         await state.get_state()
         await CraftingMargin.first()  # Меняем состояние на первое
-
+        # В анализ
         insert_in_analyz_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
                                call.from_user.username, call.data.split(':')[1])
 

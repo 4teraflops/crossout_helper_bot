@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import logging
 import time
 import sqlite3
-from .w_config import webhook_url, admin_id  # Да, pycharm ругается, но на VPS это работает.
+from .w_config import webhook_url, admin_id  # Да, pycharm ругается, но это работает.
 import json
 
 db_path = 'db.sqlite'  # БД лежит в той же папке
@@ -26,16 +26,25 @@ def check_tables():
             '"name" TEXT, "name2" TEXT, "sell_price" REAL, "sell_offers" REAL, "buy_price" REAL, "buy_orders" REAL, '
             '"faction" TEXT, "rarity" TEXT, "margin" REAL, "crafting_margin" REAL, "category" TEXT, "_type" TEXT, '
             '"last_update_time" TEXT, "operation_time" TEXT )')
+        conn.commit()
     elif 'all_collected_data' not in valid_tables:  # Создание таблицы all_collected_data
         cursor.execute(
             'CREATE TABLE "all_collected_data" ( "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "api_id" INTEGER '
             'NOT NULL, "name" TEXT, "name2" TEXT, "sell_price" REAL, "sell_offers" REAL, "buy_price" REAL, '
             '"buy_orders" REAL, "faction" TEXT, "rarity" TEXT, "margin" REAL, "crafting_margin" REAL, "category" '
             'TEXT, "_type" TEXT, "last_update_time" TEXT, "operation_time" TEXT )')
+        conn.commit()
     elif 'analyz_data' not in valid_tables:  # Создание таблицы analyz_data
-        cursor.execute('CREATE TABLE analyz_data (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, datetime TEXT NOT '
+        cursor.execute('CREATE TABLE "analyz_data" (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, datetime TEXT NOT '
                        'NULL, user_id TEXT NOT NULL, first_name TEXT, last_name TEXT, user_name TEXT NOT NULL, '
-                       'button TEXT);')
+                       'button TEXT)')
+    elif 'difference_sell_price' not in valid_tables:
+        cursor.execute('CREATE TABLE "difference_sell_price" ("id" INTEGER NOT NULL, "api_id" REAL NOT NULL, '
+                       '"name2" TEXT NOT NULL, "rarity" TEXT NOT NULL, "actual_price" REAL NOT NULL, "one_day_sign" '
+                       'TEXT NOT NULL, "diff_sell_price_one_day" REAL NOT NULL, "three_days_sign" TEXT NOT NULL, '
+                       '"diff_sell_price_three_days" REAL NOT NULL, "week_sign" TEXT NOT NULL, "diff_sell_price_week" '
+                       'REAL NOT NULL, "month_sign" TEXT NOT NULL, "diff_sell_price_month" REAL NOT NULL, '
+                       'PRIMARY KEY("id" AUTOINCREMENT))')
         conn.commit()
     else:
         return
@@ -47,9 +56,9 @@ def do_alarm(t_alarmtext):
     requests.post(url=webhook_url, data=json.dumps(payload), headers=headers)
 
 
-def get_json_items(data=None):
+def get_json_items(params):
     url = "https://crossoutdb.com/api/v1/items"
-    r = requests.get(url, params=data)
+    r = requests.get(url, params=params)
     rsp = r.json()
     return rsp
 
@@ -62,7 +71,7 @@ def get_cursor_id(table_name):
     return line_id
 
 
-def data_recording():
+def api_data_recording():
     rsp = get_json_items({'language': 'ru'})
     conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
     cursor = conn.cursor()
@@ -108,7 +117,7 @@ def data_recording():
     logger.info('Data Recorded')
 
 
-def remove_old_data():
+def remove_old_data_from_all_collected_data():
     conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
     cursor = conn.cursor()
     #  Рассчет актуального времени (текущая дата минус заданное количество минут (32 дня))
@@ -117,12 +126,111 @@ def remove_old_data():
     conn.commit()
 
 
+def get_sell_price_from_historycal_data(api_id, start_time, end_time):
+    conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
+    cursor = conn.cursor()
+    price = cursor.execute(
+        f"SELECT sell_price from all_collected_data WHERE operation_time >= '{start_time}' AND operation_time <= '{end_time}' AND api_id = '{api_id}' LIMIT 1").fetchall()
+    # если данные не найдены, то присваиваем значение 'None'
+    try:
+        price = price[0][0]
+    except IndexError:
+        price = 0
+        conn.commit()
+    conn.commit()
+    # если загрузилось пустое множество, то тоже присваиваем none
+    if price:
+        conn.commit()
+        return price
+    else:
+        return 0
+
+
+def assign_sign_to_sell_price(diff):
+    sign = 0
+    if diff > 0:
+        sign = '🔺'
+    elif diff < 0:
+        sign = '🔻'
+    elif diff == 0:
+        sign = 0
+
+    return sign
+
+
+def collect_diff_data_to_bd():
+    conn = sqlite3.connect(db_path)  # Инициируем подключение к БД
+    cursor = conn.cursor()
+    cursor.execute("DELETE from difference_sell_price")  # предварительно затираем то, что было в таблице difference_sell_price
+    one_day_ago_time = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
+    one_day_ago_time_allowence = (datetime.now() - timedelta(days=1) + timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+
+    three_days_ago_time = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d %H:%M:%S")
+    three_days_ago_time_allowence = (datetime.now() - timedelta(days=3) + timedelta(minutes=30)).strftime(
+        "%Y-%m-%d %H:%M:%S")
+
+    week_ago_time = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+    week_ago_time_allowence = (datetime.now() - timedelta(days=7) + timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+
+    month_ago_time = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+    month_ago_time_allowence = (datetime.now() - timedelta(days=30) + timedelta(minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+
+    api_ids = cursor.execute("SELECT api_id from actual_data").fetchall()
+    conn.commit()
+
+    for api_id in api_ids:
+        api_id = api_id[0]
+        # Получил данные из таблицы
+        name2 = cursor.execute(f'SELECT name2 FROM actual_data WHERE api_id = "{api_id}"').fetchall()[0][0]
+        rarity = cursor.execute(f'SELECT rarity FROM actual_data WHERE api_id = "{api_id}"').fetchall()[0][0]
+        actual_sell_price = cursor.execute(f'SELECT sell_price FROM actual_data WHERE api_id = "{api_id}"').fetchall()[0][0]
+
+        sell_price_one_day_ago = get_sell_price_from_historycal_data(api_id, one_day_ago_time, one_day_ago_time_allowence)
+        sell_price_three_days_ago = get_sell_price_from_historycal_data(api_id, three_days_ago_time,
+                                                                        three_days_ago_time_allowence)
+        sell_price_week_ago = get_sell_price_from_historycal_data(api_id, week_ago_time, week_ago_time_allowence)
+        sell_price_month_ago = get_sell_price_from_historycal_data(api_id, month_ago_time, month_ago_time_allowence)
+        # Посчитал разницу (на случай, если одна из цен вернулась 0, значит данных нет и считать разницу не надо)
+        # Так же признак + или - пишем отдельным значением
+        if sell_price_one_day_ago == 0:
+            diff_sell_price_one_day = 0
+            one_day_sign = 0
+        else:
+            diff_sell_price_one_day = round((actual_sell_price - sell_price_one_day_ago), 2)
+            one_day_sign = assign_sign_to_sell_price(diff_sell_price_one_day)
+
+        if sell_price_three_days_ago == 0:
+            diff_sell_price_three_days = 0
+            three_days_sign = 0
+        else:
+            diff_sell_price_three_days = round((actual_sell_price - sell_price_three_days_ago), 2)
+            three_days_sign = assign_sign_to_sell_price(diff_sell_price_three_days)
+
+        if sell_price_week_ago == 0:
+            diff_sell_price_week =0
+            week_sign = 0
+        else:
+            diff_sell_price_week = round((actual_sell_price - sell_price_week_ago), 2)
+            week_sign = assign_sign_to_sell_price(diff_sell_price_week)
+
+        if sell_price_month_ago == 0:
+            diff_sell_price_month = 0
+            month_sign = 0
+        else:
+            diff_sell_price_month = round((actual_sell_price - sell_price_month_ago), 2)
+            month_sign = assign_sign_to_sell_price(diff_sell_price_month)
+  # Записываем полученные данные в таблицу (записываем абсолютные значения, а признак + или - пишем отдельным значением)
+        cursor.execute(f"INSERT INTO difference_sell_price VALUES (Null, '{api_id}', '{name2}', '{rarity}', '{actual_sell_price}', '{one_day_sign}', '{abs(diff_sell_price_one_day)}', '{three_days_sign}', '{abs(diff_sell_price_three_days)}', '{week_sign}', '{abs(diff_sell_price_week)}', '{month_sign}', '{abs(diff_sell_price_month)}')")
+        conn.commit()
+
+
 if __name__ == '__main__':
     try:
         while True:
             check_tables()
-            data_recording()
-            remove_old_data()
+            api_data_recording()
+            remove_old_data_from_all_collected_data()
+            collect_diff_data_to_bd()
             time.sleep(240)
     except KeyboardInterrupt:
         print('Вы завершили работу программы collector')
