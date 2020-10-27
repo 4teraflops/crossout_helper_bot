@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 
-db_path = os.getcwd() + os.sep + 'src' + os.sep + 'db.sqlite'
+db_path = '/home/pirat/soft/collector_crossoutdb/src/db.sqlite'
 
 
 def _get_top5_crafting(rare):

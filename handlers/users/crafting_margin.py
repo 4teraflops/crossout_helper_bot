@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from src.selector import _get_top5_crafting
 from aiogram.dispatcher import FSMContext
 from loader import dp, bot
@@ -9,9 +9,7 @@ from keyboards.inline.callback_datas import menu_callbacks
 from keyboards.inline.choice_buttons import start_menu, crafting_margin_choise_rare
 from src.analyzer import insert_in_analyz_table
 
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 @dp.message_handler(Command('start'), state='*')

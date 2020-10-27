@@ -1,11 +1,8 @@
 from loader import bot, storage
-import logging
-from src.app_collector import do_alarm
+from src.analyzer import do_alarm
+from loguru import logger
 
-
-logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s',
-                    level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 async def on_shutdown(dp):
@@ -24,6 +21,6 @@ if __name__ == '__main__':
         print('Вы завершили работу программы collector')
         logger.info('Program has been stop manually')
     except Exception as e:
-        t_alarmtext = f'Crossout_helper (app.py): {str(e)}'
+        t_alarmtext = f'Crossout_helper (app.py):\n {str(e)}'
         do_alarm(t_alarmtext)
         logger.error(f'Other except error Exception', exc_info=True)

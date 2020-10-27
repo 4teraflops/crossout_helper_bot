@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from src.selector import get_top_10_difference_prices
 from aiogram.dispatcher import FSMContext
 from loader import dp, bot
@@ -10,8 +10,7 @@ from keyboards.inline.choice_buttons import difference_prices_choise_time_range,
 from src.analyzer import insert_in_analyz_table
 
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 @dp.callback_query_handler(menu_callbacks.filter(click1='difference_prices'), state=CraftingMargin.Start)  # Ловим State
@@ -19,7 +18,7 @@ async def crafting_margin(call: CallbackQuery, state: FSMContext):
     await state.get_state()
     # Укажем cache_time, чтобы бот не получал какое-то время апдейты, тогда нижний код не будет выполняться.
     # Отобразим что у нас лежит в callback_data
-    #logger.info(f'callback_data_type={call.data.split(":")[1]}')  # Задаю разделитель ":" и вывел второй элемент массива
+    #logger.debug(f'callback_data_type={call.data.split(":")[1]}')  # Задаю разделитель ":" и вывел второй элемент массива
     text = 'Выбери временной диапазон'
     await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=text)  # Меняем текст в сообщении
     await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id, reply_markup=difference_prices_choise_time_range)  # Меняем клавиатуру в сообщении
